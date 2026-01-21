@@ -1,0 +1,89 @@
+﻿@model IEnumerable<SIETE.Models.Property.PropertyAssignmentHistory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>History</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Property)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TPSNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransferType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PropertyTransaction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PreviousQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LatestQuantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Property.PropertyName),  @Html.DisplayFor(modelItem => item.Property.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TPSNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransferType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remarks)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PropertyTransaction.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LatestQuantity)
+            </td>
+          
+        </tr>
+}
+    </tbody>
+</table>

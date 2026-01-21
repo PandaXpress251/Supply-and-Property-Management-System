@@ -1,0 +1,83 @@
+﻿@model IEnumerable<SIETE.Models.Property.PropertyTransactionDetail>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Property Transaction Details</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PropertyTransaction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Property)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisposalType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignmentID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PropertyTransaction.TransactionID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Property.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisposalType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignmentID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PropertyTransactionDetailID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PropertyTransactionDetailID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PropertyTransactionDetailID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Supply and Inventory Tracking with Ease</title>
+
+    <link rel="stylesheet" href="~/lib/DataTables/datatables.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome-6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="active">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="~/img/siete.png" alt="SIETE Logo" class="logo" />
+                </div>
+                <h3>SIETE</h3>
+                <p class="text-muted">Inventory Management</p>
+            </div>
+            @{
+
+                var role = Context.Session.GetInt32("Role");
+                var isAdmin = role == (int)SIETE.Models.Roles.Admin;
+                var username = Context.Session.GetString("Username");
+
+            }
+
+
+            <div class="sidebar-content">
+              
+                    <ul class="nav-categories">
+
+                    @if (isAdmin)
+                    { 
+                        <li class="nav-category">
+                            <span class="category-title">Administration</span>
+                            <ul class="list-unstyled nav-items">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="UserAccounts" asp-action="Index">
+                                        <i class="fas fa-user-tie"></i><span>Manage Accounts</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                  
+                        <li class="nav-category">
+                            <span class="category-title">Master Data</span>
+                            <ul class="list-unstyled nav-items">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="PlantillaPositions" asp-action="Index">
+                                        <i class="fas fa-user-tie"></i><span>Positions</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Employees" asp-action="Index">
+                                        <i class="fas fa-users"></i><span>Employees</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Offices" asp-action="Index">
+                                        <i class="fas fa-building"></i><span>Responsibility Centers</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="FundClusters" asp-action="Index">
+                                        <i class="fas fa-money-bill-wave"></i><span>Fund Clusters</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Suppliers" asp-action="Index">
+                                        <i class="fas fa-truck"></i><span>Suppliers</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="PriceThresholds" asp-action="Index">
+                                        <i class="fas fa-tags"></i><span>Price Thresholds</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                     }
+                    <li class="nav-category">
+                        <span class="category-title">Inventory</span>
+                        <ul class="list-unstyled nav-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="StockCards" asp-action="Index">
+                                    <i class="fas fa-box"></i><span>Stock Cards</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyCards" asp-action="Index">
+                                    <i class="fas fa-clipboard-list"></i><span>Property Cards</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyAssignments" asp-action="Index">
+                                    <i class="fas fa-clipboard-list"></i><span>PropertyAssignments</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyAssignmentHistories" asp-action="Index">
+                                    <i class="fas fa-clipboard-list"></i><span>PropertyAssignments History</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-category">
+                        <span class="category-title">Documents</span>
+                        <ul class="list-unstyled nav-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="IAR" asp-action="IARUpload">
+                                    <i class="fas fa-file-upload"></i><span>Scan IAR Form</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-category">
+                        <span class="category-title">Supply Transactions</span>
+                        <ul class="list-unstyled nav-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="SupplyTransactions" asp-action="Index">
+                                    <i class="fas fa-exchange-alt"></i><span>Transaction Index</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="SupplyTransactions" asp-action="SupplyIN">
+                                    <i class="fas fa-arrow-right-to-bracket"></i><span>Supply IN</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="SupplyTransactions" asp-action="SupplyOUT">
+                                    <i class="fas fa-arrow-right-from-bracket"></i><span>Supply OUT</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-category">
+                        <span class="category-title">Property Transactions</span>
+                        <ul class="list-unstyled nav-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyTransactions" asp-action="Index">
+                                    <i class="fas fa-exchange-alt"></i><span>Transaction Index</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyTransactions" asp-action="AcquireProperties">
+                                    <i class="fas fa-plus-circle"></i><span>Acquire Properties</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyTransactions" asp-action="TransferProperties">
+                                    <i class="fas fa-exchange-alt"></i><span>Transfer Properties</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyTransactions" asp-action="ReTransferProperties">
+                                    <i class="fas fa-sync"></i><span>ReTransfer Properties</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="PropertyTransactions" asp-action="DisposeProperties">
+                                    <i class="fas fa-trash-alt"></i><span>Dispose Properties</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-category">
+                        <span class="category-title">Reports</span>
+                        <ul class="list-unstyled nav-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Report" asp-action="MovementIssueReport">
+                                    <i class="fas fa-file-alt"></i><span>RSMI (Prototype)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>&copy; 2025 - CSC - SIETE</p>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <button class="btn sidebar-toggle" id="sidebarCollapse">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="page-title">
+                        <h4>@ViewData["Title"]</h4>
+                    </div>
+                    <div class="user-menu ms-auto">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="username">@username</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i>Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Overlay for mobile sidebar -->
+            <div class="overlay"></div>
+
+            <div class="container-fluid content-container py-4">
+                @RenderBody()
+                @await Html.PartialAsync("_GlobalModal")
+            </div>
+
+            <footer class="footer text-muted py-3">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            &copy; 2025 - Civil Service Commission - Supply and Inventory Tracking with Ease
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <a asp-action="Privacy" asp-controller="Home" class="text-muted">About</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/DataTables/datatables.min.js"></script>
+    <script src="~/js/globalModal.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

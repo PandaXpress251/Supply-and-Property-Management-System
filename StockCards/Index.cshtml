@@ -1,0 +1,67 @@
+﻿@model IEnumerable<SIETE.Models.Supply.StockCard>
+
+@{
+    ViewData["Title"] = "Stock Cards";
+}
+
+<div class="container py-4">
+    <h2 class="text-primary fw-bold mb-4">📦 Stock Cards</h2>
+
+    <div class="table-responsive">
+        <table id="dataTable" class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Item Description</th>
+                    <th>UnitMeasurement</th>
+                    <th>Quantity</th>
+                    <th>TotalAmount</th>
+                    <th>LastUpdated</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.StockCardName, @item.StockDescription</td>
+                        <td>@item.StockUnitMeasurement</td>
+                        <td class="text-end">@item.CurrentStockQuantity</td>
+                        <td class="text-end">
+                            @item.TotalAmount.ToString("C", new System.Globalization.CultureInfo("en-PH"))
+                        </td>
+                        <td>@item.LastUpdated.ToString("MMMM dd, yyyy")</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-warning"
+                                    onclick="openGlobalModal('StockCard Info', '/StockCards/Details/@item.StockCardID', 'fas fa-pen')"
+                                    data-bs-toggle="tooltip" title="View">
+                                <i class="fas fa-pen"></i> View Details
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                responsive: true,
+                fixedHeader: true,
+                pageLength: 10,
+                language: {
+                    search: "🔍 Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ stock items",
+                    emptyTable: "No stock data available."
+                }
+            });
+
+            // Enable Bootstrap tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        });
+    </script>
+}

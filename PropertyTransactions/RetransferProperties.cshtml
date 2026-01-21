@@ -1,0 +1,188 @@
+@model SIETE.Models.Property.PropertyTransactionVM
+
+@{
+    ViewData["Title"] = "Retransfer Properties";
+}
+
+<div class="container-fluid">
+    <h2>Retransfer Properties</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <form asp-action="RetransferProperties" id="retransferForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Transfer From (Current Holder)</label>
+                            <select asp-for="EmployeeID" asp-items="Model.EmployeeList" class="form-control" id="employeeSelect">
+                                <option value="">-- Select Employee --</option>
+                            </select>
+                            <span asp-validation-for="EmployeeID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Transfer To</label>
+                            <select asp-for="TransferToEmployeeID" asp-items="Model.TransferToEmployeeList" class="form-control">
+                                <option value="">-- Select Employee --</option>
+                            </select>
+                            <span asp-validation-for="TransferToEmployeeID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">Select Properties to Transfer</label>
+                            <select id="propertySelect" class="form-control">
+                                <option value="">-- Select Property --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Quantity</label>
+                            <input type="number" id="quantityInput" class="form-control" min="1" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">&nbsp;</label>
+                            <button type="button" id="addPropertyBtn" class="btn btn-primary form-control">Add Property</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">Remarks</label>
+                            <textarea asp-for="Transaction.Remarks" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Transaction.Remarks" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <table class="table table-bordered" id="propertyTable">
+                            <thead>
+                                <tr>
+                                    <th>Property Name</th>
+                                    <th>Quantity</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="submit" value="Transfer Properties" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            // Load assigned properties when employee is selected
+            $('#employeeSelect').change(function () {
+                var employeeId = $(this).val();
+                if (employeeId) {
+                    $.get('/PropertyTransactions/GetAssignedProperties', { employeeId: employeeId }, function (data) {
+                        var propertySelect = $('#propertySelect');
+                        propertySelect.empty();
+                        propertySelect.append($('<option></option>').val('').text('-- Select Property --'));
+                        
+                        data.forEach(function (item) {
+                            propertySelect.append($('<option></option>')
+                                .val(item.propertyID)
+                                .text(item.propertyName)
+                                .data('quantity', item.quantity));
+                        });
+                    });
+                }
+            });
+
+            // Add property to transfer list
+            $('#addPropertyBtn').click(function () {
+                var propertySelect = $('#propertySelect');
+                var quantity = $('#quantityInput').val();
+                var selectedOption = propertySelect.find('option:selected');
+                
+                if (!propertySelect.val()) {
+                    alert('Please select a property');
+                    return;
+                }
+                
+                if (!quantity || quantity <= 0) {
+                    alert('Please enter a valid quantity');
+                    return;
+                }
+
+                var maxQuantity = selectedOption.data('quantity');
+                if (parseInt(quantity) > maxQuantity) {
+                    alert('Quantity cannot exceed available quantity: ' + maxQuantity);
+                    return;
+                }
+
+                // Check if property is already in the table
+                var propertyId = propertySelect.val();
+                var existingRow = $('#propertyTable tbody tr[data-property-id="' + propertyId + '"]');
+                
+                if (existingRow.length > 0) {
+                    alert('This property is already in the transfer list');
+                    return;
+                }
+
+                // Add to table
+                var row = $('<tr></tr>')
+                    .attr('data-property-id', propertyId)
+                    .append($('<td></td>').text(selectedOption.text()))
+                    .append($('<td></td>').text(quantity))
+                    .append($('<td></td>').html('<button type="button" class="btn btn-danger btn-sm remove-property">Remove</button>'));
+
+                // Add hidden inputs for form submission
+                row.append($('<input type="hidden" name="PropertyTransactionDetail[0].PropertyID" />').val(propertyId));
+                row.append($('<input type="hidden" name="PropertyTransactionDetail[0].Quantity" />').val(quantity));
+
+                $('#propertyTable tbody').append(row);
+
+                // Clear inputs
+                propertySelect.val('');
+                $('#quantityInput').val('');
+            });
+
+            // Remove property from transfer list
+            $(document).on('click', '.remove-property', function () {
+                $(this).closest('tr').remove();
+            });
+
+            // Form submission validation
+            $('#retransferForm').submit(function (e) {
+                if ($('#propertyTable tbody tr').length === 0) {
+                    e.preventDefault();
+                    alert('Please add at least one property to transfer');
+                    return false;
+                }
+            });
+        });
+    </script>
+} 

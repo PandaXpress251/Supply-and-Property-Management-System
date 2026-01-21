@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SIETE.Models.PriceThreshold>
+
+@{
+    ViewData["Title"] = "Price Thresholds";
+}
+
+<div class="container mt-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-center flex-column mb-4">
+        <h2 class="fw-bold text-primary mb-0">📊 Price Threshold Management</h2>
+        <p class="text-muted mb-0">View and manage thresholds for property and SEP values.</p>
+    </div>
+
+    <!-- Data Table (now simplified without DataTable features) -->
+    <div class="table-responsive shadow-sm border rounded">
+        <table class="table table-bordered table-hover align-middle mb-0 mx-auto">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.First().PropertyThreshold)</th>
+                    <th>@Html.DisplayNameFor(model => model.First().SPThreshold)</th>
+                    <th>@Html.DisplayNameFor(model => model.First().EffectiveDate)</th>
+                    <th style="width: 100px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>₱@String.Format("{0:N2}", item.PropertyThreshold)</td>
+                        <td>₱@String.Format("{0:N2}", item.SPThreshold)</td>
+                        <td>@item.EffectiveDate.ToString("MMMM dd, yyyy")</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-warning"
+                                    onclick="openGlobalModal('Edit Thresholds', '/PriceThresholds/Edit/@item.Id', 'fas fa-pen')"
+                                    data-bs-toggle="tooltip" title="Edit">
+                                <i class="fas fa-pen"></i> Update
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

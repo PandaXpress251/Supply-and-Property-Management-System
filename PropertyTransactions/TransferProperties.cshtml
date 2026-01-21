@@ -1,0 +1,242 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model SIETE.Models.Property.PropertyTransactionVM
+@{
+    ViewData["Title"] = "Transfer Properties";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        🔄 Transfer Properties
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="TransferProperties" method="post" id="transferForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <!-- Employee Selection -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label fw-bold">
+                                        👤 Select Employee to Assign:<span class="text-danger">*</span>
+                                    </label>
+                                    <select asp-for="EmployeeID" class="form-select" asp-items="Model.EmployeeList" required>
+                                        <option value="">-- Select Employee --</option>
+                                    </select>
+                                    <span asp-validation-for="EmployeeID" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Selection -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">
+                                    📦 Properties to Transfer
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="propertyRows">
+                                    <div class="row mb-3 property-row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label class="control-label fw-bold">
+                                                    📝Property from Database<span class="text-danger">*</span>
+                                                </label>
+                                                <select name="PropertyTransactionDetail[0].PropertyID" class="form-select property-select" required>
+                                                    <option value="">-- Select Property --</option>
+                                                    @foreach (var item in Model.PropertyList)
+                                                    {
+                                                        <option value="@item.Value" 
+                                                                data-description="@item.Text.Split('|')[1]"
+                                                                data-unit="@item.Text.Split('|')[2]"
+                                                                data-cost="@item.Text.Split('|')[3]"
+                                                                data-stock="@item.Text.Split('|')[4]">
+                                                            @item.Text.Split('|')[0]
+                                                        </option>
+                                                    }
+                                                </select>
+                                                <div class="property-details mt-2" style="display: none;">
+                                                    <small class="text-muted">
+                                                        <span class="description"></span><br>
+                                                        <span class="unit"></span><br>
+                                                        <span class="cost"></span><br>
+                                                        <span class="stock text-primary fw-bold"></span>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label fw-bold">
+                                                    🔢 Quantity <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="input-group">
+                                                    <input type="number" name="PropertyTransactionDetail[0].Quantity" class="form-control" required min="1" />
+                                                    <span class="input-group-text">units</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger remove-row" style="display: none;">
+                                                🗑️ Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-success" id="addPropertyRow">
+                                            ➕ Add Another Property
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Remarks -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label fw-bold">
+                                        💬 Remarks
+                                    </label>
+                                    <textarea name="Transaction.Remarks" class="form-control" rows="3" 
+                                              placeholder="Enter any additional notes about this transfer..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group text-end">
+                                    <a asp-action="Index" class="btn btn-secondary me-2">
+                                        ⬅️ Back to List
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        📤 Transfer Properties
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            var rowCount = 1;
+
+            // Function to update remove buttons visibility
+            function updateRemoveButtons() {
+                if ($('.property-row').length > 1) {
+                    $('.remove-row').show();
+                } else {
+                    $('.remove-row').hide();
+                }
+            }
+
+            // Function to update property details
+            function updatePropertyDetails(select) {
+                var detailsDiv = $(select).closest('.form-group').find('.property-details');
+                var selectedOption = $(select).find('option:selected');
+                
+                if (selectedOption.val()) {
+                    detailsDiv.find('.description').text('Description: ' + selectedOption.data('description'));
+                    detailsDiv.find('.unit').text('Unit: ' + selectedOption.data('unit'));
+                    detailsDiv.find('.cost').text('Unit Cost: ₱' + selectedOption.data('cost'));
+                    detailsDiv.find('.stock').text('Available Quantity: ' + selectedOption.data('stock') + ' units');
+                    detailsDiv.show();
+                } else {
+                    detailsDiv.hide();
+                }
+            }
+
+            // Add new property row
+            $('#addPropertyRow').click(function () {
+                var newRow = $('.property-row:first').clone();
+                newRow.find('select, input').val('');
+                newRow.find('.property-details').hide();
+                newRow.find('select, input').each(function () {
+                    var name = $(this).attr('name');
+                    if (name) {
+                        $(this).attr('name', name.replace(/\[\d+\]/, '[' + rowCount + ']'));
+                    }
+                });
+                $('#propertyRows').append(newRow);
+                rowCount++;
+                updateRemoveButtons();
+            });
+
+            // Remove property row
+            $(document).on('click', '.remove-row', function () {
+                $(this).closest('.property-row').remove();
+                updateRemoveButtons();
+            });
+
+            // Property selection change handler
+            $(document).on('change', '.property-select', function() {
+                var selectedOption = $(this).find('option:selected');
+                var quantityInput = $(this).closest('.property-row').find('input[type="number"]');
+                
+                // Update property details
+                updatePropertyDetails(this);
+                
+                // Enable/disable quantity input based on property selection
+                if ($(this).val()) {
+                    quantityInput.prop('disabled', false);
+                } else {
+                    quantityInput.prop('disabled', true);
+                }
+            });
+
+            // Form validation
+            $('#transferForm').on('submit', function(e) {
+                var isValid = true;
+                
+                // Check if at least one property is selected
+                if ($('.property-row').length === 0) {
+                    alert('Please add at least one property to transfer.');
+                    isValid = false;
+                }
+
+                // Validate each property row
+                $('.property-row').each(function() {
+                    var propertySelect = $(this).find('.property-select');
+                    var quantityInput = $(this).find('input[type="number"]');
+                    
+                    if (!propertySelect.val()) {
+                        alert('Please select a property for all rows.');
+                        isValid = false;
+                        return false;
+                    }
+                    
+                    if (!quantityInput.val() || quantityInput.val() < 1) {
+                        alert('Please enter a valid quantity (minimum 1) for all properties.');
+                        isValid = false;
+                        return false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+
+            // Initialize remove buttons visibility
+            updateRemoveButtons();
+        });
+    </script>
+}

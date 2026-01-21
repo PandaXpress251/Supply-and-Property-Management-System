@@ -1,0 +1,248 @@
+﻿@model IEnumerable<SIETE.Models.PlantillaPosition>
+
+@{
+    ViewData["Title"] = "Position Management";
+}
+
+<div class="container-fluid mt-5">
+    <!-- Page Header -->
+    <div class="d-flex flex-column mb-4">
+        <div class="d-flex align-items-center mb-2">
+            <span class="me-2 text-accent" style="font-size: 1.5rem;">👥</span>
+            <h2 class="fw-bold text-primary mb-0">Position Management</h2>
+        </div>
+        <p class="text-muted mb-0 ms-4">Manage and organize the positions in your system.</p>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Filters -->
+        <div class="d-flex gap-2">
+            <select class="form-select filter-select" id="statusFilter" style="min-width: 150px;">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+
+        <!-- Add Button -->
+        <button class="btn btn-gradient-primary"
+                onclick="openGlobalModal('Add New Position', '/PlantillaPositions/Create', 'fas fa-plus-circle')"
+                data-bs-toggle="tooltip" data-bs-placement="left" title="Create a new position">
+            <i class="fas fa-plus-circle me-1"></i> Add New Position
+        </button>
+    </div>
+
+    <!-- Main Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="positionsTable">
+                    <thead class="table-header">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.First().PositionTitle)</th>
+                            <th>Status</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2" style="font-size: 1.2rem;">👥</span>
+                                        <span class="fw-medium">@Html.DisplayFor(modelItem => item.PositionTitle)</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success-subtle text-success">
+                                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger">
+                                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>Inactive
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-view"
+                                                onclick="openGlobalModal('👥 Position Details', '/PlantillaPositions/Details/@item.PositionID', 'fas fa-eye')"
+                                                data-bs-toggle="tooltip" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-edit"
+                                                onclick="openGlobalModal('👥 Update Position', '/PlantillaPositions/Edit/@item.PositionID', 'fas fa-pen')"
+                                                data-bs-toggle="tooltip" title="Update Position">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            var table = $('#positionsTable').DataTable({
+                responsive: true,
+                fixedHeader: true,
+                pageLength: 10,
+                columnDefs: [
+                    {
+                        targets: -1, // Last column (Actions)
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+
+            // Status Filter
+            $('#statusFilter').on('change', function() {
+                var status = $(this).val();
+                table.column(1).search(status).draw();
+            });
+
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+    </script>
+}
+
+<style>
+    /* Table Styling */
+    .table-header {
+        background: linear-gradient(135deg, #003366, #004d99);
+        color: white !important;
+    }
+
+    .table-header th {
+        border: none;
+        padding: 1rem;
+        font-weight: 500;
+        color: white !important;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Badge Styling */
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 0.5rem;
+    }
+
+    .bg-primary-subtle {
+        background-color: #e8f0fe;
+    }
+
+    .text-primary {
+        color: #003366 !important;
+    }
+
+    .bg-success-subtle {
+        background-color: #e6f4ea;
+    }
+
+    .text-success {
+        color: #137333 !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #fce8e6;
+    }
+
+    .text-danger {
+        color: #c5221f !important;
+    }
+
+    /* Button Styling */
+    .btn-gradient-primary {
+        background: linear-gradient(135deg, #003366, #004d99);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient-primary:hover {
+        background: linear-gradient(135deg, #002244, #003366);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 51, 102, 0.3);
+    }
+
+    .btn-view {
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+        color: white;
+        border: none;
+    }
+
+    .btn-view:hover {
+        background: linear-gradient(135deg, #1976D2, #1565C0);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #FFD700, #FFC107);
+        color: #003366;
+        border: none;
+    }
+
+    .btn-edit:hover {
+        background: linear-gradient(135deg, #FFC107, #FFA000);
+        color: #003366;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Form Controls */
+    .filter-select {
+        border: 1px solid #dadce0;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .filter-select:focus {
+        border-color: #003366;
+        box-shadow: 0 0 0 0.2rem rgba(0, 51, 102, 0.25);
+    }
+
+    /* Card Styling */
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Accent Colors */
+    .text-accent {
+        color: #FFD700 !important;
+    }
+
+    .bg-accent-subtle {
+        background-color: #FFF8E1;
+    }
+</style>

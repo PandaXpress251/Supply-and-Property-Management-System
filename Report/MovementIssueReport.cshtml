@@ -1,0 +1,84 @@
+﻿@model SIETE.Models.MovementIssueReportVM
+@{
+    ViewData["Title"] = "Movement Issue Report";
+
+}
+
+<h1>REPORTS OF SUPPLIES AND MATERIALS ISSUED</h1>
+
+<form asp-action="MovementIssueReport" method="get">
+    <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate" class="form-control"
+               value="@Model?.StartDate.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString(" yyyy-MM-dd")" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Generate Report</button>
+</form>
+
+@if (Model != null && Model.ReportRows != null && Model.ReportRows.Any())
+{
+    <hr />
+    <h5>Report from @Model.StartDate.ToString("MMMM dd, yyyy") to @DateTime.Now.ToString("MMMM dd, yyyy")</h5>
+
+    <table id="movementReportTable" class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Responsibility Code</th>
+                <th>Stock/Prop No.</th>
+                <th>Item</th>
+                <th>Unit</th>
+                <th>Quantity Issued</th>
+                <th>Unit Cost</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Model.ReportRows)
+            {
+                <tr>
+                    <td>@row.ResponsibilityCode</td>
+                    <td>@row.StockPropNo</td>
+                    <td>@row.ItemName</td>
+                    <td>@row.Unit</td>
+                    <td>@row.Quantity</td>
+                    <td>@row.UnitCost.ToString("C", new System.Globalization.CultureInfo("en-PH"))</td>
+                    <td>@row.TotalAmount.ToString("C", new System.Globalization.CultureInfo("en-PH"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Model != null)
+{
+    <div class="alert alert-info mt-4">
+        No results found for the selected date range.
+    </div>
+}
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#movementReportTable').DataTable({
+                dom: 'Bfrtip',
+               paging: true, 
+            pageLength: 10,
+                buttons: [
+                   'excel', 'pdf', 'print'
+                ],
+
+            });
+        });
+    </script>
+}

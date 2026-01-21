@@ -1,0 +1,85 @@
+﻿@model SIETE.Models.Supply.SupplyTransaction
+
+@{
+    ViewData["Title"] = "Transaction Details";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-4">📄 Supply Transaction Details</h2>
+
+    <!-- Transaction Summary -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Transaction Type</dt>
+                <dd class="col-sm-9">@Model.Type</dd>
+
+                <dt class="col-sm-3">Date</dt>
+                <dd class="col-sm-9">@Model.Date.ToString("MMMM dd, yyyy")</dd>
+
+                <dt class="col-sm-3">Remarks</dt>
+                <dd class="col-sm-9">@Model.Remarks</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Supply In Details -->
+    @if (Model.Type == SIETE.Models.Supply.TransactionType.IN)
+    {
+        <h4 class="text-success fw-semibold mb-3">🛒 Supply In Details</h4>
+        <table class="table table-bordered table-hover table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Supply</th>
+                    <th>Quantity</th>
+                    <th>Unit Cost</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SupplyInDetails)
+                {
+                    <tr>
+                        <td>@item.Supply?.SupplyName @item.Supply?.Description</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.UnitCost.ToString("C", new System.Globalization.CultureInfo("en-PH"))</td>
+                        <td>@((item.Quantity * item.UnitCost).ToString("C", new System.Globalization.CultureInfo("en-PH")))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <!-- Supply Out Details -->
+    @if (Model.Type == SIETE.Models.Supply.TransactionType.OUT)
+    {
+        <h4 class="text-danger fw-semibold mb-3">🚚 Supply Out Details</h4>
+        <table class="table table-bordered table-hover table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Item Description</th>
+                    <th>Quantity</th>
+                    <th>Issued To</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SupplyOutDetails)
+                {
+                    <tr>
+                        <td>@item.Supply?.SupplyName @item.Supply?.Description</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Office?.OfficeName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <!-- Navigation Buttons -->
+    <div class="mt-4 d-flex gap-2">
+
+        <a asp-action="Index" class="btn btn-secondary">
+            🔙 Back to List
+        </a>
+    </div>
+</div>

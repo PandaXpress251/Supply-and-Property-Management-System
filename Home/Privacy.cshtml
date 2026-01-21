@@ -1,0 +1,372 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<div class="about-page">
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <h1 class="title">About Us</h1>
+            <div class="siete">
+                <h2>S.I.E.T.E</h2>
+                <p><span>S</span>upply <span>I</span>nventory <span>E</span>quipment <span>T</span>racking with <span>E</span>ase</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Mission -->
+        <div class="section">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="content">
+                        <div class="label">Project Overview</div>
+                        <h2>Our Mission</h2>
+                        <p>
+                            The S.I.E.T.E Inventory Management System is a Management Service Division project developed by a team of 4th-year Information Technology students from Asian College of Technology.
+                            Created as part of on-the-job training (OJT) requirement, this system represents the culmination of knowledge and skills gained throughout our academic journey.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="icon-box">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team -->
+        <div class="section alt">
+            <div class="row">
+                <div class="col-lg-6 order-lg-2">
+                    <div class="content">
+                        <div class="label">Who are we</div>
+                        <h2>Our Team</h2>
+                        <p>
+                            We are dedicated 4th-year students specializing in software development and information systems design.
+                            Through our academic training and practical experience, we have recognized the need for more efficient digital solutions
+                            within the Management Services Division (MSD), particularly in the area of inventory management.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <div class="icon-box">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="section-title">
+                <div class="label">Our Solutions</div>
+                <h2>What We Offer</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature">
+                        <div class="icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <h3>Inventory Management</h3>
+                        <p>Real-time tracking of supplies and properties with instant stock level updates.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature">
+                        <div class="icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Responsibility Tracking</h3>
+                        <p>Seamless monitoring of supply movement from procurement to use.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature">
+                        <div class="icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Role-Based Access</h3>
+                        <p>Customized access for Admin and Employees based on their roles.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature">
+                        <div class="icon">
+                            <i class="fas fa-file-import"></i>
+                        </div>
+                        <h3>Flexible Data Entry</h3>
+                        <p>Manual entry or Excel file upload options for data input.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developers -->
+        <div class="developers">
+            <div class="section-title">
+                <div class="label">Our Team</div>
+                <h2>Meet the Developers</h2>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="developer">
+                        <div class="avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Ernest N. Niere</h3>
+                        <p>Programmer</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="developer">
+                        <div class="avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Liezel M. Maglinte</h3>
+                        <p>Designer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="education">
+                <i class="fas fa-university"></i>
+                <p>Bachelor of Science in Information Technology<br>
+                Asian College of Technology (ACTIEF)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary: #3f51b5;
+        --secondary: #b71c1c;
+        --light: #e8eaf6;
+        --dark: #303f9f;
+        --gray: #455a64;
+        --accent: #c62828;
+        --beige: #F5F5DC;
+    }
+
+    .about-page {
+        background: #fff;
+    }
+
+    .header {
+        background: linear-gradient(135deg, var(--primary), var(--dark));
+        padding: 100px 0 80px;
+        color: white;
+        text-align: center;
+        position: relative;
+    }
+
+    .title {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        text-align: left;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .siete {
+        margin-top: 40px;
+    }
+
+    .siete h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: white;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .siete p {
+        font-size: 1.4rem;
+        line-height: 1.8;
+        color: white;
+        font-weight: 500;
+    }
+
+    .siete p span {
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .section {
+        padding: 80px 0;
+    }
+
+    .section.alt {
+        background: var(--light);
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .label {
+        display: inline-block;
+        padding: 6px 12px;
+        background: var(--secondary);
+        color: white;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .content h2 {
+        color: var(--primary);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .content p {
+        color: var(--gray);
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    .icon-box {
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .icon-box i {
+        font-size: 5rem;
+        color: var(--primary);
+        opacity: 0.8;
+    }
+
+    .features {
+        padding: 80px 0;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .feature {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        height: 100%;
+        transition: transform 0.3s ease;
+    }
+
+    .feature:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature .icon {
+        width: 60px;
+        height: 60px;
+        background: var(--light);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .feature .icon i {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    .feature h3 {
+        color: var(--primary);
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .feature p {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .developers {
+        padding: 80px 0;
+        background: var(--light);
+        border-radius: 8px;
+        margin: 50px 0;
+    }
+
+    .developer {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        background: var(--light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .avatar i {
+        font-size: 2rem;
+        color: var(--secondary);
+    }
+
+    .developer h3 {
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .developer p {
+        color: var(--gray);
+        margin: 0;
+    }
+
+    .education {
+        text-align: center;
+        color: var(--gray);
+        margin-top: 30px;
+    }
+
+    .education i {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 15px;
+    }
+
+    media (max-width: 768px) {
+        .header {
+            padding: 60px 0;
+        }
+
+        .title {
+            font-size: 2.5rem;
+        }
+
+        .icon-box {
+            height: 200px;
+        }
+
+        .icon-box i {
+            font-size: 4rem;
+        }
+    }
+</style>

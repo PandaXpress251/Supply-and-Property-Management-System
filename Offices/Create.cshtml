@@ -1,0 +1,84 @@
+﻿@model SIETE.Models.Office
+
+@{
+    ViewData["Title"] = "Create Office";
+    Layout = null;
+}
+
+<form asp-action="Create" id="createForm">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <input asp-for="OfficeName" class="form-control" placeholder="Enter office name" />
+                <label asp-for="OfficeName" class="form-label">Office Name</label>
+                <span asp-validation-for="OfficeName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating">
+                <input asp-for="Acronym" class="form-control" placeholder="Enter acronym" />
+                <label asp-for="Acronym" class="form-label">Acronym</label>
+                <span asp-validation-for="Acronym" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <select asp-for="OfficeType" class="form-select">
+                    <option value="">-Select Office Type-</option>
+                    <option value="Cluster/Division">Cluster/Division</option>
+                    <option value="Office">Office</option>
+                </select>
+                <label asp-for="OfficeType" class="form-label">Office Type</label>
+                <span asp-validation-for="OfficeType" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating">
+                <input asp-for="RespCenter_Code" class="form-control" placeholder="Enter responsibility center code" />
+                <label asp-for="RespCenter_Code" class="form-label">Responsibility Center Code</label>
+                <span asp-validation-for="RespCenter_Code" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <input asp-for="Parent_Code" class="form-control" placeholder="Enter parent code" />
+                <label asp-for="Parent_Code" class="form-label">Parent Code</label>
+                <span asp-validation-for="Parent_Code" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Create Office
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+    }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+</style>

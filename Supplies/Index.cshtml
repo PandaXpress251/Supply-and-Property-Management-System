@@ -1,0 +1,95 @@
+﻿@model IEnumerable<SIETE.Models.Supply.Supply>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Supplier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FundCluster)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StockCard)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StockPropNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitMeasurement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StockQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateAcquired)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supplier.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FundCluster.FundClusterCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockCard.StockCardName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockPropNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitMeasurement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateAcquired)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SupplyID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SupplyID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SupplyID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

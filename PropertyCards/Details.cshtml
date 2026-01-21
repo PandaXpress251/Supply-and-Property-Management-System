@@ -1,0 +1,67 @@
+﻿@model SIETE.Models.Property.PropertyCard
+
+@{
+    ViewData["Title"] = "Property Card Details";
+}
+
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">PropertyName</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.PropertyCardName)</dd>
+
+        <dt class="col-sm-2">Description</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.PropertyDescription)</dd>
+
+        <dt class="col-sm-2">Measurement</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.PropertyUnitMeasurement)</dd>
+
+        <dt class="col-sm-2">Quantity</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.CurrentStockQuantity)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.TotalAmount)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.TotalAmount)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.LastUpdated)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.LastUpdated)</dd>
+    </dl>
+</div>
+
+<hr />
+<h5 class="mt-4 text-secondary fw-bold">🏷️ Properties under this Card</h5>
+
+@if (Model.Properties != null && Model.Properties.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Supplier</th>
+                <th>Property Name</th>
+                <th>Quantity</th>
+                <th>Unit Cost</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prop in Model.Properties)
+            {
+                <tr>
+                    <td>@prop.Supplier.SupplierName</td>
+                    <td>@prop.PropertyName, @prop.Description</td>
+                    <td>@prop.StockQuantity</td>
+                    <td>@prop.UnitCost</td>
+                    <td>@prop.Category</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No properties are linked to this property card.</p>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

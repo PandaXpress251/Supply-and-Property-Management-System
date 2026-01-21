@@ -1,0 +1,90 @@
+﻿@model SIETE.Models.Supply.StockCard
+
+@{
+    ViewData["Title"] = "Stock Card Details";
+}
+
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StockCardName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StockCardName)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StockDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StockDescription)
+        </dd>
+
+        <dt class="col-sm-2">
+            UnitMeasurement
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StockUnitMeasurement)
+        </dd>
+
+        <dt class="col-sm-2">
+            StockQuantity
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurrentStockQuantity)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalAmount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalAmount)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastUpdated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastUpdated)
+        </dd>
+    </dl>
+</div>
+
+<hr />
+<h5 class="mt-4 text-secondary fw-bold">📦 Supplies from this Stock Card</h5>
+
+<!-- Display list of related supplies -->
+@if (Model.Supplies != null && Model.Supplies.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Supplier</th>
+                <th>Supply Name</th>
+                <th>Description</th>
+                <th>Stock Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var supply in Model.Supplies)
+            {
+                <tr>
+                    <td>@supply.Supplier.SupplierName</td>
+                    <td>@supply.SupplyName</td>
+                    <td>@supply.Description</td>
+                    <td>@supply.StockQuantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No supplies available for this stock card.</p>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

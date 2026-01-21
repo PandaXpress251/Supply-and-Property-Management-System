@@ -1,0 +1,58 @@
+﻿@model SIETE.Models.Supplier
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+    <input type="hidden" asp-for="SupplierID" />
+
+    <div class="mb-3">
+        <label asp-for="SupplierName" class="form-label fw-semibold">Supplier Name</label>
+        <input asp-for="SupplierName" class="form-control" placeholder="Enter supplier name" />
+        <span asp-validation-for="SupplierName" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label fw-semibold">Address</label>
+        <input asp-for="Address" class="form-control" placeholder="Enter address" />
+        <span asp-validation-for="Address" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ContactNo" class="form-label fw-semibold">Contact Number</label>
+        <input asp-for="ContactNo" class="form-control" placeholder="Enter contact number" />
+        <span asp-validation-for="ContactNo" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TIN" class="form-label fw-semibold">TIN</label>
+        <input asp-for="TIN" class="form-control" placeholder="e.g. 123-456-789" />
+        <span asp-validation-for="TIN" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IsVatRegistered" class="form-label fw-semibold">VAT Status</label>
+        <select asp-for="IsVatRegistered" class="form-select">
+            <option value="">-- Select VAT Status --</option>
+            <option value="true">VAT Registered</option>
+            <option value="false">Non-VAT Registered</option>
+        </select>
+        <span asp-validation-for="IsVatRegistered" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Date" class="form-label fw-semibold">Registration Date</label>
+        <input asp-for="Date" class="form-control" type="date" />
+        <span asp-validation-for="Date" class="text-danger small"></span>
+    </div>
+
+    <div class="d-flex justify-content-end pt-2 border-top">
+        <button type="submit" class="btn btn-primary">
+            💾 Save Changes
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,43 @@
+﻿@model SIETE.Models.PriceThreshold
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>PriceThreshold</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PropertyThreshold" class="control-label"></label>
+                <input asp-for="PropertyThreshold" class="form-control" />
+                <span asp-validation-for="PropertyThreshold" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SPThreshold" class="control-label"></label>
+                <input asp-for="SPThreshold" class="form-control" />
+                <span asp-validation-for="SPThreshold" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EffectiveDate" class="control-label"></label>
+                <input asp-for="EffectiveDate" class="form-control" />
+                <span asp-validation-for="EffectiveDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

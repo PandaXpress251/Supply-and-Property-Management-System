@@ -1,0 +1,300 @@
+@model SIETE.Models.Property.PropertyTransactionVM
+
+@{
+    ViewData["Title"] = "Dispose Properties";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="card-title mb-0">
+                        🗑️ Dispose Properties
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <!-- Warning Alert -->
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <h4 class="alert-heading">⚠️ Important Notice</h4>
+                        <p>Property disposal transactions cannot be edited after submission. Please verify the following before proceeding:</p>
+                        <ul>
+                            <li>Selected properties are correct</li>
+                            <li>Quantities are accurate</li>
+                            <li>Disposal reason is clearly stated</li>
+                            <li>All required information is complete</li>
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <form asp-action="DisposeProperties" method="post" id="disposeForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" id="formDisposalSource" name="DisposalSource" value="stock" />
+
+                        <!-- Disposal Source Selection -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">📋 Disposal Source</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="disposalSource" id="fromStock" value="stock" checked>
+                                    <label class="form-check-label fw-bold" for="fromStock">
+                                        From Property Stock
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="disposalSource" id="fromAssignment" value="assignment">
+                                    <label class="form-check-label fw-bold" for="fromAssignment">
+                                        From Employee Assignment
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Employee Selection (for assignment disposal) -->
+                        <div class="card mb-4" id="employeeSection" style="display: none;">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">👤 Current Holder</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <select asp-for="EmployeeID" asp-items="Model.EmployeeList" class="form-select" id="employeeSelect">
+                                        <option value="">-- Select Employee --</option>
+                                    </select>
+                                    <span asp-validation-for="EmployeeID" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Selection -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">📦 Properties to Dispose</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label fw-bold">Property</label>
+                                            <select id="propertySelect" class="form-select">
+                                                <option value="">-- Select Property --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label fw-bold">Quantity</label>
+                                            <div class="input-group">
+                                                <input type="number" id="quantityInput" class="form-control" min="1" />
+                                                <span class="input-group-text">units</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="button" id="addPropertyBtn" class="btn btn-success w-100">
+                                            ➕ Add
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover" id="propertyTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Property Name</th>
+                                                <th>Quantity</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disposal Reason -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">💬 Disposal Reason</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <textarea asp-for="Transaction.Remarks" class="form-control" rows="3" 
+                                              placeholder="Please provide a detailed reason for disposal..."
+                                              required></textarea>
+                                    <span asp-validation-for="Transaction.Remarks" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group text-end">
+                                    <a asp-action="Index" class="btn btn-secondary me-2">
+                                        ⬅️ Back to List
+                                    </a>
+                                    <button type="submit" class="btn btn-danger">
+                                        🗑️ Dispose Properties
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            let propertyIndex = 0;
+
+            // Handle disposal source selection
+            $('input[name="disposalSource"]').change(function() {
+                var selectedSource = $(this).val();
+                $('#formDisposalSource').val(selectedSource);
+                
+                if (selectedSource === 'assignment') {
+                    $('#employeeSection').show();
+                    $('#employeeSelect').prop('required', true);
+                } else {
+                    $('#employeeSection').hide();
+                    $('#employeeSelect').prop('required', false);
+                    $('#employeeSelect').val('');
+                    loadAvailableProperties();
+                }
+            });
+
+            // Load properties based on source
+            function loadAvailableProperties() {
+                var source = $('input[name="disposalSource"]:checked').val();
+                if (source === 'stock') {
+                    $.get('/PropertyTransactions/GetAvailableProperties', function(data) {
+                        var propertySelect = $('#propertySelect');
+                        propertySelect.empty();
+                        propertySelect.append($('<option></option>').val('').text('-- Select Property --'));
+                        
+                        data.forEach(function(item) {
+                            propertySelect.append($('<option></option>')
+                                .val(item.propertyID)
+                                .text(item.propertyName + ', ' + item.description +' (Available: ' + item.quantity + ')'+ ' - ' + item.unitMeasurement)
+                                .data('quantity', item.quantity));
+                        });
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error loading properties:', textStatus, errorThrown);
+                        alert('Error loading properties. Please try again.');
+                    });
+                }
+            }
+
+            // Load assigned properties when employee is selected
+            $('#employeeSelect').change(function () {
+                var employeeId = $(this).val();
+                if (employeeId) {
+                    $.get('/PropertyTransactions/GetAssignedProperties', { employeeId: employeeId }, function (data) {
+                        var propertySelect = $('#propertySelect');
+                        propertySelect.empty();
+                        propertySelect.append($('<option></option>').val('').text('-- Select Property --'));
+                        
+                        data.forEach(function (item) {
+                            propertySelect.append($('<option></option>')
+                                .val(item.propertyID)
+                                .text(item.propertyName + ', ' + item.description +' (Available: ' + item.quantity + ')'+ ' - ' + item.unitMeasurement)
+                                .data('quantity', item.quantity));
+                        });
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error loading assigned properties:', textStatus, errorThrown);
+                        alert('Error loading assigned properties. Please try again.');
+                    });
+                }
+            });
+
+            // Add property to dispose list
+            $('#addPropertyBtn').click(function () {
+                var propertySelect = $('#propertySelect');
+                var quantity = $('#quantityInput').val();
+                var selectedOption = propertySelect.find('option:selected');
+                var disposalSource = $('input[name="disposalSource"]:checked').val();
+                
+                if (!propertySelect.val()) {
+                    alert('Please select a property');
+                    return;
+                }
+                
+                if (!quantity || quantity <= 0) {
+                    alert('Please enter a valid quantity');
+                    return;
+                }
+
+                var maxQuantity = selectedOption.data('quantity');
+                if (parseInt(quantity) > maxQuantity) {
+                    alert('Quantity cannot exceed available quantity: ' + maxQuantity);
+                    return;
+                }
+
+                // Check if property is already in the table
+                var propertyId = propertySelect.val();
+                var existingRow = $('#propertyTable tbody tr[data-property-id="' + propertyId + '"]');
+                
+                if (existingRow.length > 0) {
+                    alert('This property is already in the dispose list');
+                    return;
+                }
+
+                // Add to table
+                var row = $('<tr></tr>')
+                    .attr('data-property-id', propertyId)
+                    .append($('<td></td>').text(selectedOption.text().split(' (Available:')[0]))
+                    .append($('<td></td>').text(quantity))
+                    .append($('<td></td>').html('<button type="button" class="btn btn-danger btn-sm remove-property">🗑️ Remove</button>'));
+
+                // Add hidden inputs for form submission
+                row.append($('<input type="hidden" name="PropertyTransactionDetail[' + propertyIndex + '].PropertyID" />').val(propertyId));
+                row.append($('<input type="hidden" name="PropertyTransactionDetail[' + propertyIndex + '].Quantity" />').val(quantity));
+
+                $('#propertyTable tbody').append(row);
+                propertyIndex++;
+
+                // Clear inputs
+                propertySelect.val('');
+                $('#quantityInput').val('');
+            });
+
+            // Remove property from dispose list
+            $(document).on('click', '.remove-property', function () {
+                $(this).closest('tr').remove();
+            });
+
+            // Form submission validation
+            $('#disposeForm').submit(function (e) {
+                if ($('#propertyTable tbody tr').length === 0) {
+                    e.preventDefault();
+                    alert('Please add at least one property to dispose');
+                    return false;
+                }
+
+                var source = $('input[name="disposalSource"]:checked').val();
+                if (source === 'assignment' && !$('#employeeSelect').val()) {
+                    e.preventDefault();
+                    alert('Please select an employee');
+                    return false;
+                }
+
+                // Confirm disposal
+                if (!confirm('Are you sure you want to dispose these properties? This action cannot be undone.')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Trigger initial load of properties
+            loadAvailableProperties();
+        });
+    </script>
+} 

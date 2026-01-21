@@ -1,0 +1,72 @@
+﻿@model SIETE.Models.PlantillaPosition
+
+@{
+    ViewData["Title"] = "Edit Position";
+}
+
+<form asp-action="Edit" id="editForm">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+    <input type="hidden" asp-for="PositionID" />
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="form-floating">
+                <input asp-for="PositionTitle" class="form-control" placeholder="Enter position title" />
+                <label asp-for="PositionTitle" class="form-label">Position Title</label>
+                <span asp-validation-for="PositionTitle" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="form-check form-switch">
+                <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" id="isActiveSwitch">
+                <label class="form-check-label" for="isActiveSwitch">Active Status</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Save Changes
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .form-floating > .form-control {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+    }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+
+    .alert {
+        border-radius: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+    }
+
+    .form-check-input:checked {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+    }
+</style>

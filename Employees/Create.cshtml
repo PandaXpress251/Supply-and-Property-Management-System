@@ -1,0 +1,128 @@
+﻿@model SIETE.Models.Employee
+
+@{
+    ViewData["Title"] = "Create Employee";
+}
+
+<form asp-action="Create" id="createForm">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input asp-for="Title" class="form-control" placeholder="Enter title (e.g., Mr., Mrs., Dr.)" />
+                <label asp-for="Title" class="form-label">Title</label>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input asp-for="FirstName" class="form-control" placeholder="Enter first name" />
+                <label asp-for="FirstName" class="form-label">First Name</label>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+                <label asp-for="LastName" class="form-label">Last Name</label>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input asp-for="Suffix" class="form-control" placeholder="Enter suffix (e.g., Jr., Sr., III)" />
+                <label asp-for="Suffix" class="form-label">Suffix</label>
+                <span asp-validation-for="Suffix" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <input asp-for="EmailAddress" class="form-control" placeholder="Enter email address" type="email" />
+                <label asp-for="EmailAddress" class="form-label">Email Address</label>
+                <span asp-validation-for="EmailAddress" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating">
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" />
+                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <select asp-for="OfficeID" class="form-select" asp-items="@(new SelectList(ViewBag.Offices, "OfficeID", "OfficeName"))">
+                    <option value="">Select Office</option>
+                </select>
+                <label asp-for="OfficeID" class="form-label">Office</label>
+                <span asp-validation-for="OfficeID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating">
+                <select asp-for="PositionID" class="form-select" asp-items="@(new SelectList(ViewBag.Positions, "PositionID", "PositionTitle"))">
+                    <option value="">Select Position</option>
+                </select>
+                <label asp-for="PositionID" class="form-label">Position</label>
+                <span asp-validation-for="PositionID" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+ 
+
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Create Employee
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .form-floating > .form-control {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+    }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+
+    .alert {
+        border-radius: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+    }
+
+    .form-check-input:checked {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+    }
+
+    .form-select {
+        padding-top: 1.625rem;
+        padding-bottom: 0.625rem;
+    }
+</style>

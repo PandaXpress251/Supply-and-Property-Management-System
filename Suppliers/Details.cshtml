@@ -1,0 +1,52 @@
+﻿@model SIETE.Models.Supplier
+
+<div class="modal-body">
+    <h5 class="fw-bold text-primary mb-3">Supplier Information</h5>
+    <dl class="row mb-0">
+        <dt class="col-sm-4 fw-semibold text-muted">Name</dt>
+        <dd class="col-sm-8">@Model.SupplierName</dd>
+
+        <dt class="col-sm-4 fw-semibold text-muted">Address</dt>
+        <dd class="col-sm-8">@Model.Address</dd>
+
+        <dt class="col-sm-4 fw-semibold text-muted">Contact No</dt>
+        <dd class="col-sm-8">@Model.ContactNo</dd>
+
+        <dt class="col-sm-4 fw-semibold text-muted">TIN</dt>
+        <dd class="col-sm-8">@Model.TIN</dd>
+
+        <dt class="col-sm-4 fw-semibold text-muted">VAT Status</dt>
+        <dd class="col-sm-8">
+            <span class="badge bg-@((Model.IsVatRegistered) ? "success" : "secondary")">
+                @((Model.IsVatRegistered) ? "VAT Registered" : "Non-VAT")
+            </span>
+        </dd>
+
+        <dt class="col-sm-4 fw-semibold text-muted">Date Added</dt>
+        <dd class="col-sm-8">@Model.Date.ToString("MMMM dd, yyyy")</dd>
+    </dl>
+
+    <hr />
+    <h6 class="fw-bold text-secondary mt-3">📦 Supplies Provided</h6>
+
+    @if (Model.Supplies != null && Model.Supplies.Any())
+    {
+        <ul class="list-group list-group-flush mt-2">
+            @foreach (var supply in Model.Supplies)
+            {
+                <li class="list-group-item">
+                    <strong>@supply.SupplyName</strong><br />
+                    <small class="text-muted">@supply.Description</small>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted mt-2">No supplies linked to this supplier.</p>
+    }
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+</div>

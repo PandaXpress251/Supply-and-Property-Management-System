@@ -1,0 +1,320 @@
+﻿@model SIETE.Models.Supply.SupplyTransactionVM
+
+@{
+    ViewData["Title"] = "Supply Release";
+}
+
+<div class="container-fluid">
+   
+    <form asp-action="SupplyOUT" method="post" id="supplyForm">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Transaction Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Select an Office to Release</label>
+                                    <select id="officeSelect" class="form-control" asp-items="Model.OfficeList">
+                                        <option value="">-- Select Office --</option>
+                                    </select>
+                                    <span class="text-danger" id="officeError"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Transaction.Remarks" class="control-label">Remarks</label>
+                                    <textarea asp-for="Transaction.Remarks" class="form-control" rows="1"></textarea>
+                                    <span asp-validation-for="Transaction.Remarks" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <!-- Left Side: Supply Selection Form -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Select Supply to Release</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="supply-detail-item">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Supply</label>
+                                        <select id="supplySelect" class="form-control" asp-items="Model.SupplyList">
+                                            <option value="">-- Select Supply --</option>
+                                        </select>
+                                        <span class="text-danger" id="supplyError"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Available Quantity</label>
+                                        <input type="number" id="availableQuantity" class="form-control" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Unit Cost</label>
+                                        <input type="number" id="unitCost" class="form-control" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">description</label>
+                                        <input type="text" id="AvailableDesc" class="form-control" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Unit Measurement</label>
+                                        <input type="text" id="Availableunit" class="form-control" readonly />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Release Quantity</label>
+                                        <input type="number" id="releaseQuantity" class="form-control" min="1" />
+                                        <span class="text-danger" id="quantityError"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-primary" id="addToList">Add to List</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Release List -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Release List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="suppliesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Supply Name</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="suppliesList">
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" class="text-right">Grand Total:</th>
+                                        <th id="grandTotal">0.00</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="submit" value="Release Supplies" class="btn btn-primary" id="submitBtn" disabled />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            let detailCount = 0;
+            let supplies = [];
+
+            function clearErrors() {
+                $('#supplyError, #quantityError, #officeError').text('');
+            }
+
+            function updateGrandTotal() {
+                const total = supplies.reduce((sum, item) => sum + (item.quantity * item.unitCost), 0);
+                $('#grandTotal').text(total.toFixed(2));
+                $('#submitBtn').prop('disabled', supplies.length === 0);
+            }
+
+            function addSupplyToTable(supply) {
+                const row = `
+                    <tr data-index="${detailCount}">
+                        <td>${supply.supplyName}</td>
+                        <td>${supply.quantity}</td>
+                        <td>${supply.unitCost.toFixed(2)}</td>
+                        <td>${(supply.quantity * supply.unitCost).toFixed(2)}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm remove-supply">Remove</button>
+                        </td>
+                    </tr>
+                `;
+                $('#suppliesList').append(row);
+                updateGrandTotal();
+            }
+
+            function addHiddenInputs(supply) {
+                const index = detailCount;
+                const fields = [
+                    { name: `SupplyOutDetails[${index}].SupplyID`, value: supply.supplyId },
+                    { name: `SupplyOutDetails[${index}].OfficeID`, value: $('#officeSelect').val() },
+                    { name: `SupplyOutDetails[${index}].Quantity`, value: supply.quantity },
+                    { name: `SupplyOutDetails[${index}].UnitCost`, value: supply.unitCost }
+                ];
+
+                fields.forEach(field => {
+                    $(`<input type="hidden" name="${field.name}" value="${field.value}">`).appendTo('#supplyForm');
+                });
+            }
+
+            $('#supplySelect').change(function() {
+                clearErrors();
+                const supplyId = $(this).val();
+                if (supplyId) {
+                    // Get supply details from the server
+                    $.get('/SupplyTransactions/GetSupplyDetails', { id: supplyId }, function(data) {
+                        $('#availableQuantity').val(data.stockQuantity);
+                        $('#Availableunit').val(data.unit);
+                        $('#AvailableDesc').val(data.description);
+                        $('#unitCost').val(data.unitCost);
+                        $('#releaseQuantity').attr('max', data.stockQuantity);
+                    }).fail(function() {
+                        $('#supplyError').text('Error loading supply details');
+                    });
+                    } else {
+                        $('#availableQuantity').val('');
+                        $('#unitCost').val('');
+                        $('#releaseQuantity').val('');
+                        $('#AvailableDesc').text('');
+                        $('#supplyError').text('');
+                    }
+            });
+
+            $('#addToList').click(function () {
+                clearErrors();
+                const officeId = $('#officeSelect').val();
+                const supplyId = $('#supplySelect').val();
+                const quantity = parseInt($('#releaseQuantity').val());
+                const unitCost = parseFloat($('#unitCost').val());
+                const supplyName = $('#supplySelect option:selected').text();
+                const availableQuantity = parseInt($('#availableQuantity').val());
+
+                let hasError = false;
+
+                if (!officeId) {
+                    $('#officeError').text('Please select an office');
+                    hasError = true;
+                }
+
+                if (!supplyId) {
+                    $('#supplyError').text('Please select a supply');
+                    hasError = true;
+                }
+
+                if (!quantity || quantity <= 0) {
+                    $('#quantityError').text('Please enter a valid quantity');
+                    hasError = true;
+                } else if (quantity > availableQuantity) {
+                    $('#quantityError').text('Release quantity cannot exceed available quantity');
+                    hasError = true;
+                }
+
+                if (hasError) {
+                    return;
+                }
+
+                const supply = {
+                    supplyId: supplyId,
+                    supplyName: supplyName,
+                    quantity: quantity,
+                    unitCost: unitCost
+                };
+
+                supplies.push(supply);
+                addSupplyToTable(supply);
+                addHiddenInputs(supply);
+                detailCount++;
+
+                // Clear form
+                $('#supplySelect').val('');
+                $('#availableQuantity, #unitCost, #releaseQuantity').val('');
+            });
+
+            $(document).on('click', '.remove-supply', function () {
+                const index = $(this).closest('tr').data('index');
+                supplies.splice(index, 1);
+                $(this).closest('tr').remove();
+                
+                // Rebuild hidden inputs
+                $('input[name^="SupplyOutDetails"]').remove();
+                detailCount = 0; // Reset detail count
+                supplies.forEach((supply, idx) => {
+                    addHiddenInputs(supply);
+                    detailCount++; // Increment for each supply
+                });
+                
+                updateGrandTotal();
+            });
+
+            // Prevent form submission if no supplies are added
+            $('#supplyForm').submit(function(e) {
+                if (supplies.length === 0) {
+                    e.preventDefault();
+                    alert('Please add at least one supply before submitting');
+                    return false;
+                }
+
+                if (!$('#officeSelect').val()) {
+                    e.preventDefault();
+                    $('#officeError').text('Please select an office');
+                    return false;
+                }
+
+                // Disable the entry form fields to prevent validation
+                $('#supplySelect, #officeSelect, #releaseQuantity').prop('disabled', true);
+                
+                // Clear any validation messages
+                $('.text-danger').text('');
+                $('.validation-summary-errors').hide();
+                
+                return true;
+            });
+
+            // Enable fields when form is reset or page is loaded
+            $(document).ready(function() {
+                $('#supplySelect, #officeSelect, #releaseQuantity').prop('disabled', false);
+            });
+        });
+    </script>
+}

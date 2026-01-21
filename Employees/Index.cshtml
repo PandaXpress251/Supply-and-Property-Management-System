@@ -1,0 +1,186 @@
+﻿@model IEnumerable<SIETE.Models.Employee>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex flex-column mb-4">
+            <div class="d-flex align-items-center mb-2">
+                <span class="me-2 text-accent" style="font-size: 1.5rem;">🏢</span>
+                <h2 class="fw-bold text-primary mb-0">Employee Management</h2>
+            </div>
+            <p class="text-muted mb-0 ms-4">Manage and organize the Employees in your system.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openGlobalModal('Add New Employee', '/Employees/Create', 'fas fa-user-plus')">
+            <i class="fas fa-user-plus me-2"></i>Add Employee
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="employeesTable" class="table table-hover align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="fw-semibold">Employee Name</th>
+                            <th class="fw-semibold">Office</th>
+                            <th class="fw-semibold">Position</th>
+                            <th class="fw-semibold text-center">Status</th>
+                            <th class="fw-semibold text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-user text-primary me-2"></i>
+                                        @item.FullName
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-building text-secondary me-2"></i>
+                                        @item.Office?.OfficeName
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-user-tie text-info me-2"></i>
+                                        @item.PlantillaPosition
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success-subtle text-success">
+                                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger">
+                                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>Inactive
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary"
+                                                onclick="openGlobalModal('Employee Details', '/Employees/Details/@item.EmployeeID', 'fas fa-eye')"
+                                                data-bs-toggle="tooltip" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary"
+                                                onclick="openGlobalModal('Edit Employee', '/Employees/Edit/@item.EmployeeID', 'fas fa-edit')"
+                                                data-bs-toggle="tooltip" title="Edit Employee">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#employeesTable').DataTable({
+                order: [[0, 'asc']],
+                pageLength: 10,
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search employees..."
+                },
+                columnDefs: [
+                    { orderable: false, targets: 4 }
+                ]
+            });
+
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+    </script>
+}
+
+<style>
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 0.5rem;
+    }
+
+    .bg-success-subtle {
+        background-color: #e6f4ea;
+    }
+
+    .text-success {
+        color: #137333 !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #fce8e6;
+    }
+
+    .text-danger {
+        color: #c5221f !important;
+    }
+
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .btn-outline-primary {
+        color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .btn-outline-primary:hover {
+        color: #fff;
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #e3e6f0;
+        border-radius: 0.35rem;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .dataTables_wrapper .dataTables_filter input:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+</style>
